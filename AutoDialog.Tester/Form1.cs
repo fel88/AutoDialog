@@ -10,13 +10,13 @@ namespace AutoDialog.Tester
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-            d.AddNumericField("min", "Minimum", 128);
-            d.AddNumericField("max", "Maximum", 255);
+            d.AddNumericField("min", "Minimum", 128, min: 0, max: 255, decimalPlaces: 0);
+            d.AddNumericField("max", "Maximum", 255, min: 0, max: 255, decimalPlaces: 0);
 
             if (!d.ShowDialog())
                 return;
 
-            MessageBox.Show($"Entered values: {d.GetNumericField("min")}  {d.GetNumericField("max")}");
+            MessageBox.Show($"Entered values: {d.GetIntegerNumericField("min")}  {d.GetIntegerNumericField("max")}");
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)

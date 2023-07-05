@@ -15,18 +15,31 @@ namespace AutoDialog.Tester
 
             if (!d.ShowDialog())
                 return;
+
+            MessageBox.Show($"Entered values: {d.GetNumericField("min")}  {d.GetNumericField("max")}");
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-            d.AddOptionsField("color", "Color", new string[] { "Red", "Green", "Blue" }, "Green");            
+            d.AddOptionsField("color", "Color", new string[] { "Red", "Green", "Blue" }, "Green");
 
             if (!d.ShowDialog())
                 return;
 
             var v = d.GetOptionsField("color");
             MessageBox.Show(v);
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            var d = DialogHelpers.StartDialog();
+            d.AddNumericField("int", "Integer", 128, 500, -10, 0);
+
+            if (!d.ShowDialog())
+                return;
+
+            MessageBox.Show($"Entered value: {d.GetIntegerNumericField("int")}");
         }
     }
 }

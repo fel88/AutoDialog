@@ -41,5 +41,17 @@ namespace AutoDialog.Tester
 
             MessageBox.Show($"Entered value: {d.GetIntegerNumericField("int")}");
         }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            var d = DialogHelpers.StartDialog();
+            d.AddStringField("str1", "String 1");
+            d.AddStringField("str2", "String 2", "default");
+
+            if (!d.ShowDialog())
+                return;
+
+            MessageBox.Show($"Entered value: {d.GetStringField("str1")}{Environment.NewLine}{d.GetStringField("str2")}");
+        }
     }
 }

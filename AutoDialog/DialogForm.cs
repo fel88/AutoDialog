@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+namespace System.Net.Http { }
+
 namespace AutoDialog
 {
     public class DialogForm : Form
@@ -93,6 +95,22 @@ namespace AutoDialog
 
         }
 
+        public void AddStringField(string key, string caption, string _default = "")
+        {
+            Label text = new Label() { Text = caption };
+            var tp = Controls[0] as TableLayoutPanel;
+
+            TextBox m = new TextBox();
+            m.Text = _default;
+
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            tp.RowCount++;
+            tp.Controls.Add(text, 0, tp.RowCount - 1);
+            tp.Controls.Add(m, 1, tp.RowCount - 1);
+
+            prms.Add(key, m);
+        }
+
         public void AddBoolField(string key, string caption, bool? _default = null)
         {
             Label text = new Label() { Text = caption };
@@ -147,7 +165,12 @@ namespace AutoDialog
 
         public bool GetBoolField(string v)
         {
-            return (bool)((prms[v] as CheckBox).Checked);
+            return (prms[v] as CheckBox).Checked;
+        }
+
+        public string GetStringField(string v)
+        {
+            return (prms[v] as TextBox).Text;
         }
 
         Dictionary<string, Control> prms = new Dictionary<string, Control>();

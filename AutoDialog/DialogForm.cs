@@ -11,6 +11,7 @@ namespace AutoDialog
         public DialogForm()
         {
             Shown += DialogForm_Shown;
+            FormClosing += DialogForm_FormClosing;
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             StartPosition = FormStartPosition.CenterParent;
             MaximizeBox = false;
@@ -24,6 +25,36 @@ namespace AutoDialog
             ok.Click += Ok_Click;
 
         }
+
+        private void DialogForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (DialogResult != DialogResult.OK)
+                return;
+
+            OnValidationStart?.Invoke();
+
+            List<string> failedKeys = new List<string>();
+            foreach (var item in Validators)
+            {
+                if (!item.Predicate(prms[item.Key]))
+                {
+                    failedKeys.Add(item.Key);
+                    e.Cancel = true;
+                }
+            }
+            OnValidationFailed?.Invoke(failedKeys.ToArray());
+        }
+
+        public Action<string[]> OnValidationFailed;
+        public Action OnValidationStart;
+
+        public void AddValidator(string key, Func<Control,bool> p)
+        {            
+            Validators.Add(new Validator() { Key = key, Predicate = p });
+        }
+
+        public List<Validator> Validators = new List<Validator>();
+        
 
         private void Apply()
         {
@@ -74,6 +105,11 @@ namespace AutoDialog
             }
         }
 
+        public void AddIntegerNumericField(string key, string caption, double? _default = null, decimal max = 1000, decimal min = 0)
+        {
+            AddNumericField(key, caption, _default, max, min, 0);
+        }
+
         public void AddNumericField(string key, string caption, double? _default = null, decimal max = 1000, decimal min = 0, int decimalPlaces = 2)
         {
             Label text = new Label() { Text = caption };
@@ -92,7 +128,7 @@ namespace AutoDialog
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
             prms.Add(key, m);
-
+            prms2.Add(key, [text, m]);
         }
 
         public void AddStringField(string key, string caption, string _default = "")
@@ -109,6 +145,7 @@ namespace AutoDialog
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
             prms.Add(key, m);
+            prms2.Add(key, [text, m]);
         }
 
         public void AddBoolField(string key, string caption, bool? _default = null)
@@ -127,6 +164,7 @@ namespace AutoDialog
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
             prms.Add(key, m);
+            prms2.Add(key, [text, m]);
         }
 
         public void AddOptionsField(string key, string caption, string[] options, string _default = null)
@@ -146,6 +184,27 @@ namespace AutoDialog
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
             prms.Add(key, m);
+            prms2.Add(key, [text, m]);
+        }
+
+        public void AddOptionsField(string key, string caption, string[] options, int? defaultIdx = null)
+        {
+            var text = new Label() { Text = caption };
+            var tp = Controls[0] as TableLayoutPanel;
+
+            ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
+            m.Items.AddRange(options);
+
+            if (defaultIdx != null)
+                m.SelectedIndex = defaultIdx.Value;
+
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            tp.RowCount++;
+            tp.Controls.Add(text, 0, tp.RowCount - 1);
+            tp.Controls.Add(m, 1, tp.RowCount - 1);
+
+            prms2.Add(key, [text, m]);
+            prms.Add(key, m);
         }
 
         public double GetNumericField(string v)
@@ -163,6 +222,11 @@ namespace AutoDialog
             return (string)((prms[v] as ComboBox).SelectedItem);
         }
 
+        public int GetOptionsFieldIdx(string v)
+        {
+            return ((prms[v] as ComboBox).SelectedIndex);
+        }
+
         public bool GetBoolField(string v)
         {
             return (prms[v] as CheckBox).Checked;
@@ -174,6 +238,10 @@ namespace AutoDialog
         }
 
         Dictionary<string, Control> prms = new Dictionary<string, Control>();
+        Dictionary<string, Control[]> prms2 = new Dictionary<string, Control[]>();
+
+        public IReadOnlyDictionary<string, Control[]> CreatedControls => prms2;
+        public IReadOnlyDictionary<string, Control> InputControls => prms;
 
         private void InitializeComponent()
         {

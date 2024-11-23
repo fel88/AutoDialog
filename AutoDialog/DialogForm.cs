@@ -16,16 +16,18 @@ namespace AutoDialog
             StartPosition = FormStartPosition.CenterParent;
             MaximizeBox = false;
             MinimizeBox = false;
-            TableLayoutPanel tp = new TableLayoutPanel();
+            tp = new TableLayoutPanel();
             tp.Dock = DockStyle.Fill;
             Controls.Add(tp);
 
-            Button ok = new Button() { Text = "apply" };
+            ok = new Button() { Text = "apply" };
             tp.Controls.Add(ok, 0, tp.RowCount - 1);
             ok.Click += Ok_Click;
 
         }
-
+        Button ok;
+        public Button ApplyButton => ok;
+        TableLayoutPanel tp;
         private void DialogForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (DialogResult != DialogResult.OK)
@@ -48,13 +50,13 @@ namespace AutoDialog
         public Action<string[]> OnValidationFailed;
         public Action OnValidationStart;
 
-        public void AddValidator(string key, Func<Control,bool> p)
-        {            
+        public void AddValidator(string key, Func<Control, bool> p)
+        {
             Validators.Add(new Validator() { Key = key, Predicate = p });
         }
 
         public List<Validator> Validators = new List<Validator>();
-        
+
 
         private void Apply()
         {
@@ -81,12 +83,19 @@ namespace AutoDialog
             return base.ShowDialog() == DialogResult.OK;
         }
 
-        const int gap = 50;
-        private void DialogForm_Shown(object sender, System.EventArgs e)
+        public int StaticGap = 50;
+        public int GapPerRow = 30;
+        bool inited = false;
+        public void Init()
         {
+            if (inited)
+                return;
+
+            inited = true;
+
             var tp = Controls[0] as TableLayoutPanel;
 
-            Height = (tp.RowCount + 1) * 30 + gap;
+            Height = (tp.RowCount + 1) * GapPerRow + StaticGap;
             foreach (var item in tp.Controls.OfType<Control>())
             {
                 if (item is TextBox b || item is NumericUpDown || item is ComboBox)
@@ -105,6 +114,11 @@ namespace AutoDialog
             }
         }
 
+        private void DialogForm_Shown(object sender, System.EventArgs e)
+        {
+            Init();
+        }                
+
         public void AddIntegerNumericField(string key, string caption, double? _default = null, decimal max = 1000, decimal min = 0)
         {
             AddNumericField(key, caption, _default, max, min, 0);
@@ -122,7 +136,7 @@ namespace AutoDialog
             if (_default != null)
                 m.Value = (decimal)_default.Value;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
             tp.RowCount++;
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
@@ -139,13 +153,36 @@ namespace AutoDialog
             TextBox m = new TextBox();
             m.Text = _default;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
             tp.RowCount++;
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
             prms.Add(key, m);
             prms2.Add(key, [text, m]);
+        }
+
+        public void AddCustomDialogField(string key, string caption, Action buttonPress)
+        {
+            Label text = new Label() { Text = caption };
+            var tp = Controls[0] as TableLayoutPanel;
+
+            Panel gb = new Panel();
+
+            Button m = new Button();
+            m.Click += (ss, ee) => { buttonPress?.Invoke(); };
+            //  Label label = new Label();
+            gb.Controls.Add(m);
+            //  gb.Controls.Add(label);
+            m.Text = "...";
+
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
+            tp.RowCount++;
+            tp.Controls.Add(text, 0, tp.RowCount - 1);
+            tp.Controls.Add(gb, 1, tp.RowCount - 1);
+
+            prms.Add(key, gb);
+            prms2.Add(key, [text, gb]);
         }
 
         public void AddBoolField(string key, string caption, bool? _default = null)
@@ -158,7 +195,7 @@ namespace AutoDialog
             if (_default != null)
                 m.Checked = (bool)_default.Value;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
             tp.RowCount++;
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
@@ -178,7 +215,7 @@ namespace AutoDialog
             if (_default != null)
                 m.SelectedItem = _default;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
             tp.RowCount++;
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
@@ -198,7 +235,7 @@ namespace AutoDialog
             if (defaultIdx != null)
                 m.SelectedIndex = defaultIdx.Value;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
             tp.RowCount++;
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
@@ -253,6 +290,16 @@ namespace AutoDialog
             this.Name = "DialogForm";
             this.ResumeLayout(false);
 
+        }
+
+        public void SetWidth(int v)
+        {
+            Width = v;
+            foreach (var item in CreatedControls.Keys)
+            {
+                CreatedControls[item][0].Width = v / 2;
+                CreatedControls[item][1].Left = v / 2;
+            }
         }
     }
 }

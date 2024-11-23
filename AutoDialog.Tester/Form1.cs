@@ -1,3 +1,4 @@
+using AutoDialog.Extensions;
 using System.Collections.Immutable;
 
 namespace AutoDialog.Tester
@@ -139,6 +140,62 @@ namespace AutoDialog.Tester
                 return;
 
             MessageBox.Show($"{d.GetIntegerNumericField("num1")} > {d.GetIntegerNumericField("num2")}");
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            var d = DialogHelpers.StartDialog();
+            d.AddCustomDialogField("custom", "Color", () =>
+            {
+                ColorDialog cd = new ColorDialog();
+                cd.Color = this.ForeColor;
+                cd.ShowDialog();
+                this.ForeColor = cd.Color;
+            });
+            d.AddCustomDialogField("font", "Font", () =>
+            {
+                FontDialog f = new FontDialog();
+                f.Font = toolStrip1.Font;
+                f.ShowDialog();
+                toolStrip1.Font = f.Font;
+            });
+
+            if (!d.ShowDialog())
+                return;
+        }
+
+        private void test1ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.EditWithAutoDialog();
+        }
+
+        private void test2ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var d = DialogHelpers.StartDialog();
+            d.GapPerRow = 20;
+
+            d.AppendPropertiesToDialog(this);           
+            d.SetWidth(600);
+            
+            d.Init();
+            d.ApplyButton.Text = "Save and quit";
+            d.ApplyButton.AutoSize = true;
+            d.Top = 0;
+            if (!d.ShowDialog())
+                return;
+
+            d.ExtractPropertiesToObject(this);
+            
         }
     }
 }

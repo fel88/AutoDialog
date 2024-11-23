@@ -39,13 +39,17 @@
             toolStripDropDownButton2 = new ToolStripDropDownButton();
             test1ToolStripMenuItem = new ToolStripMenuItem();
             test2ToolStripMenuItem = new ToolStripMenuItem();
+            toolStripButton2 = new ToolStripButton();
+            toolStripDropDownButton3 = new ToolStripDropDownButton();
+            test1ToolStripMenuItem1 = new ToolStripMenuItem();
+            test2ToolStripMenuItem1 = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripDropDownButton1, toolStripButton3, toolStripButton4, toolStripDropDownButton2 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripDropDownButton1, toolStripButton3, toolStripButton4, toolStripDropDownButton2, toolStripButton2, toolStripDropDownButton3 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(700, 25);
@@ -119,16 +123,50 @@
             // test1ToolStripMenuItem
             // 
             test1ToolStripMenuItem.Name = "test1ToolStripMenuItem";
-            test1ToolStripMenuItem.Size = new Size(180, 22);
+            test1ToolStripMenuItem.Size = new Size(102, 22);
             test1ToolStripMenuItem.Text = "test 1";
             test1ToolStripMenuItem.Click += test1ToolStripMenuItem_Click;
             // 
             // test2ToolStripMenuItem
             // 
             test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
-            test2ToolStripMenuItem.Size = new Size(180, 22);
+            test2ToolStripMenuItem.Size = new Size(102, 22);
             test2ToolStripMenuItem.Text = "test 2";
             test2ToolStripMenuItem.Click += test2ToolStripMenuItem_Click;
+            // 
+            // toolStripButton2
+            // 
+            toolStripButton2.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            toolStripButton2.Image = (Image)resources.GetObject("toolStripButton2.Image");
+            toolStripButton2.ImageTransparentColor = Color.Magenta;
+            toolStripButton2.Name = "toolStripButton2";
+            toolStripButton2.Size = new Size(51, 22);
+            toolStripButton2.Text = "custom";
+            toolStripButton2.Click += toolStripButton2_Click;
+            // 
+            // toolStripDropDownButton3
+            // 
+            toolStripDropDownButton3.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            toolStripDropDownButton3.DropDownItems.AddRange(new ToolStripItem[] { test1ToolStripMenuItem1, test2ToolStripMenuItem1 });
+            toolStripDropDownButton3.Image = (Image)resources.GetObject("toolStripDropDownButton3.Image");
+            toolStripDropDownButton3.ImageTransparentColor = Color.Magenta;
+            toolStripDropDownButton3.Name = "toolStripDropDownButton3";
+            toolStripDropDownButton3.Size = new Size(82, 22);
+            toolStripDropDownButton3.Text = "from object";
+            // 
+            // test1ToolStripMenuItem1
+            // 
+            test1ToolStripMenuItem1.Name = "test1ToolStripMenuItem1";
+            test1ToolStripMenuItem1.Size = new Size(180, 22);
+            test1ToolStripMenuItem1.Text = "test 1";
+            test1ToolStripMenuItem1.Click += test1ToolStripMenuItem1_Click;
+            // 
+            // test2ToolStripMenuItem1
+            // 
+            test2ToolStripMenuItem1.Name = "test2ToolStripMenuItem1";
+            test2ToolStripMenuItem1.Size = new Size(180, 22);
+            test2ToolStripMenuItem1.Text = "test 2";
+            test2ToolStripMenuItem1.Click += test2ToolStripMenuItem1_Click;
             // 
             // Form1
             // 
@@ -141,6 +179,7 @@
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "AutoDialog.Tester";
+            Load += Form1_Load;
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ResumeLayout(false);
@@ -159,5 +198,9 @@
         private ToolStripDropDownButton toolStripDropDownButton2;
         private ToolStripMenuItem test1ToolStripMenuItem;
         private ToolStripMenuItem test2ToolStripMenuItem;
+        private ToolStripButton toolStripButton2;
+        private ToolStripDropDownButton toolStripDropDownButton3;
+        private ToolStripMenuItem test1ToolStripMenuItem1;
+        private ToolStripMenuItem test2ToolStripMenuItem1;
     }
 }

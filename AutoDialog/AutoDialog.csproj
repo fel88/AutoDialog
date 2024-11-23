@@ -7,7 +7,7 @@
 		<LangVersion>latest</LangVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>https://github.com/fel88</Authors>
-		<Version>1.0.0.6</Version>
+		<Version>1.0.0.7</Version>
 		<RepositoryUrl>https://github.com/fel88/AutoDialog</RepositoryUrl>		
 	</PropertyGroup>
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">		

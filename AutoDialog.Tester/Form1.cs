@@ -184,9 +184,9 @@ namespace AutoDialog.Tester
             var d = DialogHelpers.StartDialog();
             d.GapPerRow = 20;
 
-            d.AppendPropertiesToDialog(this);           
+            d.AppendPropertiesToDialog(this);
             d.SetWidth(600);
-            
+
             d.Init();
             d.ApplyButton.Text = "Save and quit";
             d.ApplyButton.AutoSize = true;
@@ -195,7 +195,20 @@ namespace AutoDialog.Tester
                 return;
 
             d.ExtractPropertiesToObject(this);
-            
+
+        }
+
+        private void enumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var d = DialogHelpers.StartDialog();
+            var list = new string[] { "Red", "Green", "Blue", "Red" };
+
+            d.AddEnumField("FormBorderStyle", "FormBorderStyle", FormBorderStyle);
+
+            if (!d.ShowDialog())
+                return;
+
+            this.FormBorderStyle = d.GetEnumField<FormBorderStyle>("FormBorderStyle");
         }
     }
 }

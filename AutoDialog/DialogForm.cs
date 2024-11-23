@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Windows.Forms;
 
 namespace System.Net.Http { }
@@ -117,7 +118,7 @@ namespace AutoDialog
         private void DialogForm_Shown(object sender, System.EventArgs e)
         {
             Init();
-        }                
+        }
 
         public void AddIntegerNumericField(string key, string caption, double? _default = null, decimal max = 1000, decimal min = 0)
         {
@@ -136,8 +137,8 @@ namespace AutoDialog
             if (_default != null)
                 m.Value = (decimal)_default.Value;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
-            tp.RowCount++;
+            NewRow();
+
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
@@ -153,8 +154,8 @@ namespace AutoDialog
             TextBox m = new TextBox();
             m.Text = _default;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
-            tp.RowCount++;
+            NewRow();
+
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
@@ -176,8 +177,8 @@ namespace AutoDialog
             //  gb.Controls.Add(label);
             m.Text = "...";
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
-            tp.RowCount++;
+            NewRow();
+
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(gb, 1, tp.RowCount - 1);
 
@@ -195,8 +196,8 @@ namespace AutoDialog
             if (_default != null)
                 m.Checked = (bool)_default.Value;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
-            tp.RowCount++;
+            NewRow();
+
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
@@ -215,13 +216,24 @@ namespace AutoDialog
             if (_default != null)
                 m.SelectedItem = _default;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
-            tp.RowCount++;
+            NewRow();
+
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
             prms.Add(key, m);
             prms2.Add(key, [text, m]);
+        }
+
+        private void NewRow()
+        {
+            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
+            tp.RowCount++;
+        }
+
+        public void AddEnumField<T>(string key, string caption, T _default) where T : System.Enum
+        {
+            AddOptionsField(key, caption, Enum.GetNames(typeof(T)), Enum.GetName(typeof(T), _default));
         }
 
         public void AddOptionsField(string key, string caption, string[] options, int? defaultIdx = null)
@@ -235,8 +247,7 @@ namespace AutoDialog
             if (defaultIdx != null)
                 m.SelectedIndex = defaultIdx.Value;
 
-            tp.RowStyles.Add(new RowStyle(SizeType.Absolute, GapPerRow));
-            tp.RowCount++;
+            NewRow();
             tp.Controls.Add(text, 0, tp.RowCount - 1);
             tp.Controls.Add(m, 1, tp.RowCount - 1);
 
@@ -257,6 +268,11 @@ namespace AutoDialog
         public string GetOptionsField(string v)
         {
             return (string)((prms[v] as ComboBox).SelectedItem);
+        }
+
+        public T GetEnumField<T>(string v) where T : System.Enum
+        {
+            return (T)Enum.Parse(typeof(T), (string)((prms[v] as ComboBox).SelectedItem));
         }
 
         public int GetOptionsFieldIdx(string v)

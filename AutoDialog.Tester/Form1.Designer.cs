@@ -34,6 +34,7 @@
             toolStripDropDownButton1 = new ToolStripDropDownButton();
             options1ToolStripMenuItem = new ToolStripMenuItem();
             options2ToolStripMenuItem = new ToolStripMenuItem();
+            enumToolStripMenuItem = new ToolStripMenuItem();
             toolStripButton3 = new ToolStripButton();
             toolStripButton4 = new ToolStripButton();
             toolStripDropDownButton2 = new ToolStripDropDownButton();
@@ -43,14 +44,14 @@
             toolStripDropDownButton3 = new ToolStripDropDownButton();
             test1ToolStripMenuItem1 = new ToolStripMenuItem();
             test2ToolStripMenuItem1 = new ToolStripMenuItem();
-            enumToolStripMenuItem = new ToolStripMenuItem();
+            toolStripButton5 = new ToolStripButton();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripDropDownButton1, toolStripButton3, toolStripButton4, toolStripDropDownButton2, toolStripButton2, toolStripDropDownButton3 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripDropDownButton1, toolStripButton3, toolStripButton4, toolStripDropDownButton2, toolStripButton2, toolStripDropDownButton3, toolStripButton5 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(700, 25);
@@ -80,16 +81,23 @@
             // options1ToolStripMenuItem
             // 
             options1ToolStripMenuItem.Name = "options1ToolStripMenuItem";
-            options1ToolStripMenuItem.Size = new Size(180, 22);
+            options1ToolStripMenuItem.Size = new Size(123, 22);
             options1ToolStripMenuItem.Text = "options 1";
             options1ToolStripMenuItem.Click += options1ToolStripMenuItem_Click;
             // 
             // options2ToolStripMenuItem
             // 
             options2ToolStripMenuItem.Name = "options2ToolStripMenuItem";
-            options2ToolStripMenuItem.Size = new Size(180, 22);
+            options2ToolStripMenuItem.Size = new Size(123, 22);
             options2ToolStripMenuItem.Text = "options 2";
             options2ToolStripMenuItem.Click += options2ToolStripMenuItem_Click;
+            // 
+            // enumToolStripMenuItem
+            // 
+            enumToolStripMenuItem.Name = "enumToolStripMenuItem";
+            enumToolStripMenuItem.Size = new Size(123, 22);
+            enumToolStripMenuItem.Text = "enum";
+            enumToolStripMenuItem.Click += enumToolStripMenuItem_Click;
             // 
             // toolStripButton3
             // 
@@ -158,23 +166,26 @@
             // test1ToolStripMenuItem1
             // 
             test1ToolStripMenuItem1.Name = "test1ToolStripMenuItem1";
-            test1ToolStripMenuItem1.Size = new Size(102, 22);
+            test1ToolStripMenuItem1.Size = new Size(180, 22);
             test1ToolStripMenuItem1.Text = "test 1";
             test1ToolStripMenuItem1.Click += test1ToolStripMenuItem1_Click;
             // 
             // test2ToolStripMenuItem1
             // 
             test2ToolStripMenuItem1.Name = "test2ToolStripMenuItem1";
-            test2ToolStripMenuItem1.Size = new Size(102, 22);
+            test2ToolStripMenuItem1.Size = new Size(180, 22);
             test2ToolStripMenuItem1.Text = "test 2";
             test2ToolStripMenuItem1.Click += test2ToolStripMenuItem1_Click;
             // 
-            // enumToolStripMenuItem
+            // toolStripButton5
             // 
-            enumToolStripMenuItem.Name = "enumToolStripMenuItem";
-            enumToolStripMenuItem.Size = new Size(180, 22);
-            enumToolStripMenuItem.Text = "enum";
-            enumToolStripMenuItem.Click += enumToolStripMenuItem_Click;
+            toolStripButton5.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            toolStripButton5.Image = (Image)resources.GetObject("toolStripButton5.Image");
+            toolStripButton5.ImageTransparentColor = Color.Magenta;
+            toolStripButton5.Name = "toolStripButton5";
+            toolStripButton5.Size = new Size(33, 22);
+            toolStripButton5.Text = "tabs";
+            toolStripButton5.Click += toolStripButton5_Click_1;
             // 
             // Form1
             // 
@@ -211,5 +222,6 @@
         private ToolStripMenuItem test1ToolStripMenuItem1;
         private ToolStripMenuItem test2ToolStripMenuItem1;
         private ToolStripMenuItem enumToolStripMenuItem;
+        private ToolStripButton toolStripButton5;
     }
 }

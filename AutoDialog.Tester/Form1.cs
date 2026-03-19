@@ -182,10 +182,10 @@ namespace AutoDialog.Tester
         private void test2ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-            d.GapPerRow = 20;
+          //  d.GapPerRow = 20;
 
             d.AppendPropertiesToDialog(this);
-            d.SetWidth(600);
+            //d.SetWidth(600);
 
             d.Init();
             d.ApplyButton.Text = "Save and quit";
@@ -209,6 +209,22 @@ namespace AutoDialog.Tester
                 return;
 
             this.FormBorderStyle = d.GetEnumField<FormBorderStyle>("FormBorderStyle");
+        }
+
+        private void toolStripButton5_Click_1(object sender, EventArgs e)
+        {   
+            var d = DialogHelpers.StartDialog();
+            
+            d.AddDouble("n1", "Num 1");
+            d.NewColumn();
+            d.AddDouble("n2", "Num 2");
+
+            if (!d.ShowDialog())
+                return;
+
+            var n1 = d.GetDouble("n1");
+            var n2 = d.GetDouble("n2");
+            MessageBox.Show($"{n1},  {n2}");
         }
     }
 }

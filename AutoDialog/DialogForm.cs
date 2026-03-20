@@ -96,22 +96,22 @@ namespace AutoDialog
         private void InitAsSinglePage()
         {
             Width = (1 + columnIdx) * ColumnStep;
-            
-            foreach (var item in CreatedControls.OfType<Control>())
+
+            foreach (var item in CreatedControls.SelectMany(z => z.Value))
             {
-                if (item is TextBox b || item is NumericUpDown || item is ComboBox)
+                if (item is not TextBox b && item is not NumericUpDown && item is not ComboBox && item is not CheckBox)                
+                    continue;
+                
+                item.Focus();
+                if (item is TextBox tb)
                 {
-                    item.Focus();
-                    if (item is TextBox tb)
-                    {
-                        tb.SelectAll();
-                    }
-                    if (item is NumericUpDown n)
-                    {
-                        n.Select(0, n.Text.Length);
-                    }
-                    break;
+                    tb.SelectAll();
                 }
+                if (item is NumericUpDown n)
+                {
+                    n.Select(0, n.Text.Length);
+                }
+                break;
             }
         }
 
@@ -245,8 +245,8 @@ namespace AutoDialog
             if (MaxRowsAllowed != null && rowIdx > MaxRowsAllowed)
                 NewColumn();
 
-            if (Height < targetHeight)            
-                Height = targetHeight;            
+            if (Height < targetHeight)
+                Height = targetHeight;
         }
 
         public void NewColumn()
@@ -266,7 +266,7 @@ namespace AutoDialog
 
         public void AddOptionsField(string key, string caption, string[] options, int? defaultIdx = null)
         {
-            var text = new Label() { Text = caption };            
+            var text = new Label() { Text = caption };
 
             ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
             m.Items.AddRange(options);

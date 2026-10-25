@@ -128,7 +128,7 @@ namespace AutoDialog
 
         public IntAutoDialogProperty AddInt(string caption, double? _default = null, decimal min = 0, decimal max = 1000)
         {
-            Label text = new Label() { Text = caption };
+            Label text = CreateLabel(caption);
 
             NumericUpDown m = new NumericUpDown();
             m.Maximum = max;
@@ -147,7 +147,7 @@ namespace AutoDialog
 
         public void AddDouble(string key, string caption, double? _default = null, decimal min = 0, decimal max = 1000, int decimalPlaces = 2)
         {
-            Label text = new Label() { Text = caption };
+            Label text = CreateLabel(caption);
 
             NumericUpDown m = new NumericUpDown();
             m.Maximum = max;
@@ -167,7 +167,7 @@ namespace AutoDialog
 
         public DoubleAutoDialogProperty AddDouble(string caption, double? _default = null, decimal min = 0, decimal max = 1000, int decimalPlaces = 2)
         {
-            Label text = new Label() { Text = caption };
+            Label text = CreateLabel(caption);
 
             NumericUpDown m = new NumericUpDown();
             m.Maximum = max;
@@ -186,9 +186,8 @@ namespace AutoDialog
 
         public void AddStringField(string key, string caption, string _default = "")
         {
-            Label text = new Label() { Text = caption };
-            var tp = Controls[0] as TableLayoutPanel;
-
+            Label text = CreateLabel(caption);
+            
             TextBox m = new TextBox();
             m.Text = _default;
 
@@ -200,10 +199,20 @@ namespace AutoDialog
             prms2.Add(key, [text, m]);
         }
 
+        public Action<Control> ControlCreated;
+
+        private Label CreateLabel(string caption)
+        {
+            var label = new Label() { Text = caption};
+            label.Width = CellStep;
+            ControlCreated?.Invoke(label);
+            return label;
+        }
+
         public StringAutoDialogProperty AddString(string caption, string _default = "")
         {
-            Label text = new Label() { Text = caption };
-            var tp = Controls[0] as TableLayoutPanel;
+            Label text = CreateLabel(caption);
+                        
 
             TextBox m = new TextBox();
             m.Text = _default;
@@ -216,7 +225,7 @@ namespace AutoDialog
 
         public void AddCustomDialogField(string key, string caption, Action buttonPress)
         {
-            Label text = new Label() { Text = caption };
+            Label text = CreateLabel(caption);
 
             Button m = new Button();
             m.Click += (ss, ee) => { buttonPress?.Invoke(); };
@@ -235,7 +244,7 @@ namespace AutoDialog
 
         public void AddBool(string key, string caption, bool? _default = null)
         {
-            Label text = new Label() { Text = caption };
+            Label text = CreateLabel(caption);
 
             CheckBox m = new CheckBox();
 
@@ -253,9 +262,10 @@ namespace AutoDialog
 
         public BoolAutoDialogProperty AddBool(string caption, bool? _default = null)
         {
-            Label text = new Label() { Text = caption };
+            Label text = CreateLabel(caption);            
 
             CheckBox m = new CheckBox();
+            ControlCreated?.Invoke(m);
 
             if (_default != null)
                 m.Checked = (bool)_default.Value;
@@ -269,7 +279,7 @@ namespace AutoDialog
 
         public void AddOptionsField(string key, string caption, string[] options, string _default = null)
         {
-            var text = new Label() { Text = caption };
+            var text = CreateLabel(caption);
 
             ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
             m.Items.AddRange(options);
@@ -288,13 +298,13 @@ namespace AutoDialog
 
         public OptionsAutoDialogProperty AddOptions(string caption, string[] options, int? _defaultIdx = null)
         {
-            var text = new Label() { Text = caption };
+            var text = CreateLabel(caption);
 
             ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
             m.Items.AddRange(options);
 
             if (_defaultIdx != null)
-                m.SelectedIndex = _defaultIdx.Value;            
+                m.SelectedIndex = _defaultIdx.Value;
 
             Locate(text);
             Locate(m, true);
@@ -305,7 +315,7 @@ namespace AutoDialog
 
         public OptionsAutoDialogProperty AddOptions(string caption, string[] options, string _default = null)
         {
-            var text = new Label() { Text = caption };
+            var text = CreateLabel(caption);
 
             ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
             m.Items.AddRange(options);
@@ -343,7 +353,7 @@ namespace AutoDialog
 
         public IAutoDialogProperty<T> AddEnum<T>(string caption, T defaultT) where T : System.Enum
         {
-            var text = new Label() { Text = caption };
+            var text = CreateLabel(caption);
             var options = Enum.GetNames(typeof(T));
             ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
             m.Items.AddRange(options);
@@ -357,7 +367,7 @@ namespace AutoDialog
             Locate(m, true);
             NewRow();
 
-            return new EnumOptionsAutoDialogProperty<T>(text, m);            
+            return new EnumOptionsAutoDialogProperty<T>(text, m);
         }
 
         public void AddEnumField<T>(string key, string caption, T _default) where T : System.Enum
@@ -371,7 +381,7 @@ namespace AutoDialog
 
         public void AddOptionsField(string key, string caption, string[] options, int? defaultIdx = null)
         {
-            var text = new Label() { Text = caption };
+            var text = CreateLabel(caption);
 
             ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
             m.Items.AddRange(options);

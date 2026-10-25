@@ -45,13 +45,15 @@
             test1ToolStripMenuItem1 = new ToolStripMenuItem();
             test2ToolStripMenuItem1 = new ToolStripMenuItem();
             toolStripButton5 = new ToolStripButton();
+            toolStripDropDownButton4 = new ToolStripDropDownButton();
+            longLabelsToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripDropDownButton1, toolStripButton3, toolStripButton4, toolStripDropDownButton2, toolStripButton2, toolStripDropDownButton3, toolStripButton5 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripDropDownButton1, toolStripButton3, toolStripButton4, toolStripDropDownButton2, toolStripButton2, toolStripDropDownButton3, toolStripButton5, toolStripDropDownButton4 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(700, 25);
@@ -187,6 +189,23 @@
             toolStripButton5.Text = "tabs";
             toolStripButton5.Click += toolStripButton5_Click_1;
             // 
+            // toolStripDropDownButton4
+            // 
+            toolStripDropDownButton4.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            toolStripDropDownButton4.DropDownItems.AddRange(new ToolStripItem[] { longLabelsToolStripMenuItem });
+            toolStripDropDownButton4.Image = (Image)resources.GetObject("toolStripDropDownButton4.Image");
+            toolStripDropDownButton4.ImageTransparentColor = Color.Magenta;
+            toolStripDropDownButton4.Name = "toolStripDropDownButton4";
+            toolStripDropDownButton4.Size = new Size(56, 22);
+            toolStripDropDownButton4.Text = "format";
+            // 
+            // longLabelsToolStripMenuItem
+            // 
+            longLabelsToolStripMenuItem.Name = "longLabelsToolStripMenuItem";
+            longLabelsToolStripMenuItem.Size = new Size(180, 22);
+            longLabelsToolStripMenuItem.Text = "long labels";
+            longLabelsToolStripMenuItem.Click += longLabelsToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -223,5 +242,7 @@
         private ToolStripMenuItem test2ToolStripMenuItem1;
         private ToolStripMenuItem enumToolStripMenuItem;
         private ToolStripButton toolStripButton5;
+        private ToolStripDropDownButton toolStripDropDownButton4;
+        private ToolStripMenuItem longLabelsToolStripMenuItem;
     }
 }

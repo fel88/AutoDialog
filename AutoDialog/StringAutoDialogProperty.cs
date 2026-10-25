@@ -2,10 +2,10 @@
 
 namespace AutoDialog
 {
-    public class StringAutoDialogProperty : IAutoDialogProperty<string>
+    public class StringAutoDialogProperty : AbstractDialogProperty, IAutoDialogProperty<string>
     {
         TextBox TextBox;
-        public StringAutoDialogProperty(Control label, TextBox textBox)
+        public StringAutoDialogProperty(Control label, TextBox textBox) : base([label, textBox])
         {
             TextBox = textBox;
         }

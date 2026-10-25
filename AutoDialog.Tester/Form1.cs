@@ -226,5 +226,24 @@ namespace AutoDialog.Tester
             var n2 = d.GetDouble("n2");
             MessageBox.Show($"{n1},  {n2}");
         }
+
+        private void longLabelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var d = DialogHelpers.StartDialog();
+            
+            d.CellStep += 30;            
+            d.ColumnStep += 30;            
+
+            var prop = d.AddDouble("Put_extremely_long_label_here");                        
+            var prop2 = d.AddDouble("Num 2");           
+            
+            if (!d.ShowDialog())
+                return;
+
+            var n1 = prop.Value;
+            var n2 = prop2.Value;
+            MessageBox.Show($"{n1},  {n2}");
+        }       
+        
     }
 }

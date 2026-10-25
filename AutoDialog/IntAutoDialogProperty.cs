@@ -2,10 +2,10 @@
 
 namespace AutoDialog
 {
-    public class IntAutoDialogProperty : IAutoDialogProperty<int>
+    public class IntAutoDialogProperty : AbstractDialogProperty, IAutoDialogProperty<int>
     {
         NumericUpDown NumericUpDown;
-        public IntAutoDialogProperty(Control label, NumericUpDown numericUpDown)
+        public IntAutoDialogProperty(Control label, NumericUpDown numericUpDown) : base([label, numericUpDown])
         {
             NumericUpDown = numericUpDown;
         }

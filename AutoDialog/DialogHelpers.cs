@@ -23,25 +23,20 @@ namespace AutoDialog
                     continue;
 
                 if (item.PropertyType == typeof(bool))
-                {
-                    d.AddBoolField(item.Name, item.Name, (bool)item.GetValue(obj));
-                }
+                    d.AddBool(item.Name, item.Name, (bool)item.GetValue(obj));
+
                 else if (item.PropertyType == typeof(string))
-                {
                     d.AddStringField(item.Name, item.Name, (string)item.GetValue(obj));
-                }
+
                 else if (item.PropertyType == typeof(int))
-                {
-                    d.AddIntegerNumericField(item.Name, item.Name, (int)item.GetValue(obj), 100000000, -100000000);
-                }
+                    d.AddInt(item.Name, item.Name, (int)item.GetValue(obj), -100000000, 100000000);
+
                 else if (item.PropertyType == typeof(double))
-                {
-                    d.AddNumericField(item.Name, item.Name, (double)item.GetValue(obj), 100000000, -100000000);
-                }
+                    d.AddDouble(item.Name, item.Name, (double)item.GetValue(obj), -100000000, 100000000);
+
                 else if (item.PropertyType == typeof(float))
-                {
-                    d.AddNumericField(item.Name, item.Name, (float)item.GetValue(obj), 100000000, -100000000);
-                }
+                    d.AddDouble(item.Name, item.Name, (float)item.GetValue(obj), -100000000, 100000000);
+
                 else if (item.PropertyType.IsEnum)
                 {
                     var val = Enum.GetName(item.PropertyType, item.GetValue(obj));
@@ -89,25 +84,20 @@ namespace AutoDialog
                     continue;
 
                 if (item.PropertyType == typeof(bool))
-                {
                     item.SetValue(obj, d.GetBoolField(item.Name));
-                }
+
                 else if (item.PropertyType == typeof(string))
-                {
                     item.SetValue(obj, d.GetStringField(item.Name));
-                }
+
                 else if (item.PropertyType == typeof(int))
-                {
-                    item.SetValue(obj, d.GetIntegerNumericField(item.Name));
-                }
+                    item.SetValue(obj, d.GetInt(item.Name));
+
                 else if (item.PropertyType == typeof(double))
-                {
                     item.SetValue(obj, d.GetNumericField(item.Name));
-                }
+
                 else if (item.PropertyType == typeof(float))
-                {
                     item.SetValue(obj, (float)d.GetNumericField(item.Name));
-                }
+
                 else if (item.PropertyType.IsEnum)
                 {
                     var val = Enum.GetName(item.PropertyType, item.GetValue(obj));

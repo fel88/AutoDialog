@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoDialog.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
@@ -99,9 +100,9 @@ namespace AutoDialog
 
             foreach (var item in CreatedControls.SelectMany(z => z.Value))
             {
-                if (item is not TextBox b && item is not NumericUpDown && item is not ComboBox && item is not CheckBox)                
+                if (item is not TextBox b && item is not NumericUpDown && item is not ComboBox && item is not CheckBox)
                     continue;
-                
+
                 item.Focus();
                 if (item is TextBox tb)
                 {
@@ -115,21 +116,33 @@ namespace AutoDialog
             }
         }
 
-
         private void DialogForm_Shown(object sender, System.EventArgs e)
         {
             Init();
         }
 
-        [Obsolete("use AddInt instead")]
-        public void AddIntegerNumericField(string key, string caption, double? _default = null, decimal max = 1000, decimal min = 0)
-        {
-            AddInt(key, caption, _default, min, max);
-        }
-
         public void AddInt(string key, string caption, double? _default = null, decimal min = 0, decimal max = 1000)
         {
-            AddNumericField(key, caption, _default, max, min, 0);
+            AddDouble(key, caption, _default, min, max, 0);
+        }
+
+        public IntAutoDialogProperty AddInt(string caption, double? _default = null, decimal min = 0, decimal max = 1000)
+        {
+            Label text = new Label() { Text = caption };
+
+            NumericUpDown m = new NumericUpDown();
+            m.Maximum = max;
+            m.Minimum = min;
+            m.DecimalPlaces = 0;
+            if (_default != null)
+                m.Value = (decimal)_default.Value;
+
+
+            Locate(text);
+            Locate(m, true);
+            NewRow();
+
+            return new IntAutoDialogProperty(text, m);
         }
 
         public void AddDouble(string key, string caption, double? _default = null, decimal min = 0, decimal max = 1000, int decimalPlaces = 2)
@@ -152,10 +165,23 @@ namespace AutoDialog
             prms2.Add(key, [text, m]);
         }
 
-        [Obsolete("Use AddDouble")]
-        public void AddNumericField(string key, string caption, double? _default = null, decimal max = 1000, decimal min = 0, int decimalPlaces = 2)
+        public DoubleAutoDialogProperty AddDouble(string caption, double? _default = null, decimal min = 0, decimal max = 1000, int decimalPlaces = 2)
         {
-            AddDouble(key, caption, _default, min, max, decimalPlaces);
+            Label text = new Label() { Text = caption };
+
+            NumericUpDown m = new NumericUpDown();
+            m.Maximum = max;
+            m.Minimum = min;
+            m.DecimalPlaces = decimalPlaces;
+            if (_default != null)
+                m.Value = (decimal)_default.Value;
+
+
+            Locate(text);
+            Locate(m, true);
+            NewRow();
+
+            return new DoubleAutoDialogProperty(text, m);
         }
 
         public void AddStringField(string key, string caption, string _default = "")
@@ -174,12 +200,23 @@ namespace AutoDialog
             prms2.Add(key, [text, m]);
         }
 
+        public StringAutoDialogProperty AddString(string caption, string _default = "")
+        {
+            Label text = new Label() { Text = caption };
+            var tp = Controls[0] as TableLayoutPanel;
+
+            TextBox m = new TextBox();
+            m.Text = _default;
+
+            Locate(text);
+            Locate(m, true);
+            NewRow();
+            return new StringAutoDialogProperty(text, m);
+        }
+
         public void AddCustomDialogField(string key, string caption, Action buttonPress)
         {
             Label text = new Label() { Text = caption };
-
-
-
 
             Button m = new Button();
             m.Click += (ss, ee) => { buttonPress?.Invoke(); };
@@ -196,7 +233,7 @@ namespace AutoDialog
             prms2.Add(key, [text, m]);
         }
 
-        public void AddBoolField(string key, string caption, bool? _default = null)
+        public void AddBool(string key, string caption, bool? _default = null)
         {
             Label text = new Label() { Text = caption };
 
@@ -214,6 +251,21 @@ namespace AutoDialog
             prms2.Add(key, [text, m]);
         }
 
+        public BoolAutoDialogProperty AddBool(string caption, bool? _default = null)
+        {
+            Label text = new Label() { Text = caption };
+
+            CheckBox m = new CheckBox();
+
+            if (_default != null)
+                m.Checked = (bool)_default.Value;
+
+            Locate(text);
+            Locate(m, true);
+            NewRow();
+
+            return new BoolAutoDialogProperty(text, m);
+        }
 
         public void AddOptionsField(string key, string caption, string[] options, string _default = null)
         {
@@ -232,6 +284,40 @@ namespace AutoDialog
 
             prms.Add(key, m);
             prms2.Add(key, [text, m]);
+        }
+
+        public OptionsAutoDialogProperty AddOptions(string caption, string[] options, int? _defaultIdx = null)
+        {
+            var text = new Label() { Text = caption };
+
+            ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
+            m.Items.AddRange(options);
+
+            if (_defaultIdx != null)
+                m.SelectedIndex = _defaultIdx.Value;            
+
+            Locate(text);
+            Locate(m, true);
+            NewRow();
+
+            return new OptionsAutoDialogProperty(text, m);
+        }
+
+        public OptionsAutoDialogProperty AddOptions(string caption, string[] options, string _default = null)
+        {
+            var text = new Label() { Text = caption };
+
+            ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
+            m.Items.AddRange(options);
+
+            if (_default != null)
+                m.SelectedItem = _default;
+
+            Locate(text);
+            Locate(m, true);
+            NewRow();
+
+            return new OptionsAutoDialogProperty(text, m);
         }
 
         int rowIdx = 0;
@@ -253,6 +339,25 @@ namespace AutoDialog
         {
             rowIdx = 0;
             columnIdx++;
+        }
+
+        public IAutoDialogProperty<T> AddEnum<T>(string caption, T defaultT) where T : System.Enum
+        {
+            var text = new Label() { Text = caption };
+            var options = Enum.GetNames(typeof(T));
+            ComboBox m = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };
+            m.Items.AddRange(options);
+
+            var _default = Enum.GetName(typeof(T), defaultT);
+
+            if (_default != null)
+                m.SelectedItem = _default;
+
+            Locate(text);
+            Locate(m, true);
+            NewRow();
+
+            return new EnumOptionsAutoDialogProperty<T>(text, m);            
         }
 
         public void AddEnumField<T>(string key, string caption, T _default) where T : System.Enum
@@ -307,12 +412,6 @@ namespace AutoDialog
             return (int)((prms[v] as NumericUpDown).Value);
         }
 
-        [Obsolete("Use GetInt")]
-        public int GetIntegerNumericField(string v)
-        {
-            return GetInt(v);
-        }
-
         public string GetOptionsField(string v)
         {
             return (string)((prms[v] as ComboBox).SelectedItem);
@@ -337,6 +436,8 @@ namespace AutoDialog
         {
             return (prms[v] as TextBox).Text;
         }
+
+
 
         Dictionary<string, Control> prms = new Dictionary<string, Control>();
         Dictionary<string, Control[]> prms2 = new Dictionary<string, Control[]>();

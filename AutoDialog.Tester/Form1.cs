@@ -13,61 +13,61 @@ namespace AutoDialog.Tester
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-            d.AddNumericField("min", "Minimum", 128, min: 0, max: 255, decimalPlaces: 0);
-            d.AddNumericField("max", "Maximum", 255, min: 0, max: 255, decimalPlaces: 0);
+            var minProp = d.AddDouble("Minimum", 128, min: 0, max: 255, decimalPlaces: 0);
+            var maxProp = d.AddDouble("Maximum", 255, min: 0, max: 255, decimalPlaces: 0);
+            var boolProp = d.AddBool("Check");
 
             if (!d.ShowDialog())
                 return;
 
-            MessageBox.Show($"Entered values: {d.GetIntegerNumericField("min")}  {d.GetIntegerNumericField("max")}");
+            MessageBox.Show($"Entered values: {minProp.Value}  {maxProp.Value} {boolProp.Value}");
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-            d.AddIntegerNumericField("int", "Integer", 128, 500, -10);
+            var prop = d.AddInt("Integer", 128, -10, 500);
 
             if (!d.ShowDialog())
                 return;
 
-            MessageBox.Show($"Entered value: {d.GetIntegerNumericField("int")}");
+            MessageBox.Show($"Entered value: {prop.Value}");
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-            d.AddStringField("str1", "String 1");
-            d.AddStringField("str2", "String 2", "default");
+            var strProp1 = d.AddString("String 1");
+            var strProp2 = d.AddString("String 2", "default");
 
             if (!d.ShowDialog())
                 return;
 
-            MessageBox.Show($"Entered value: {d.GetStringField("str1")}{Environment.NewLine}{d.GetStringField("str2")}");
+            MessageBox.Show($"Entered value: {strProp1.Value}{Environment.NewLine}{strProp2.Value}");
         }
 
         private void options1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-            d.AddOptionsField("color", "Color", new string[] { "Red", "Green", "Blue" }, "Green");
+            var colorOpt = d.AddOptions("Color", new string[] { "Red", "Green", "Blue" }, "Green");
 
             if (!d.ShowDialog())
                 return;
 
-            var v = d.GetOptionsField("color");
-            MessageBox.Show(v);
+            MessageBox.Show(colorOpt.Value);
         }
 
         private void options2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
             var list = new string[] { "Red", "Green", "Blue", "Red" };
-            d.AddOptionsField("color", "Color", list, 3);
+            var colorOpt = d.AddOptions("Color", list, 3);
 
             if (!d.ShowDialog())
                 return;
 
-            var v = d.GetOptionsFieldIdx("color");
-            MessageBox.Show($"#{v} : {list[v]}");
+            var idx = colorOpt.ValueIdx;
+            MessageBox.Show($"#{idx} : {list[idx]}");
         }
 
         private void test1ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -109,11 +109,11 @@ namespace AutoDialog.Tester
         private void test2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-            d.AddIntegerNumericField("num1", "Num 1");
-            d.AddIntegerNumericField("num2", "Num 2");
+            d.AddInt("num1", "Num 1");
+            d.AddInt("num2", "Num 2");
             d.AddValidator("num1", (c) =>
             {
-                return d.GetIntegerNumericField("num1") > d.GetIntegerNumericField("num2");
+                return d.GetInt("num1") > d.GetInt("num2");
             });
 
             d.OnValidationStart = () =>
@@ -139,7 +139,7 @@ namespace AutoDialog.Tester
             if (!d.ShowDialog())
                 return;
 
-            MessageBox.Show($"{d.GetIntegerNumericField("num1")} > {d.GetIntegerNumericField("num2")}");
+            MessageBox.Show($"{d.GetInt("num1")} > {d.GetInt("num2")}");
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -182,7 +182,7 @@ namespace AutoDialog.Tester
         private void test2ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             var d = DialogHelpers.StartDialog();
-          //  d.GapPerRow = 20;
+            //  d.GapPerRow = 20;
 
             d.AppendPropertiesToDialog(this);
             //d.SetWidth(600);
@@ -203,18 +203,18 @@ namespace AutoDialog.Tester
             var d = DialogHelpers.StartDialog();
             var list = new string[] { "Red", "Green", "Blue", "Red" };
 
-            d.AddEnumField("FormBorderStyle", "FormBorderStyle", FormBorderStyle);
+            var prop = d.AddEnum("FormBorderStyle", FormBorderStyle);
 
             if (!d.ShowDialog())
                 return;
 
-            this.FormBorderStyle = d.GetEnumField<FormBorderStyle>("FormBorderStyle");
+            this.FormBorderStyle = prop.Value;
         }
 
         private void toolStripButton5_Click_1(object sender, EventArgs e)
-        {   
+        {
             var d = DialogHelpers.StartDialog();
-            
+
             d.AddDouble("n1", "Num 1");
             d.NewColumn();
             d.AddDouble("n2", "Num 2");
